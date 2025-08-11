@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->dateTime('end_date');
-            $table->boolean('is_active')->default('false');
+            $table->boolean('is_active')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });
