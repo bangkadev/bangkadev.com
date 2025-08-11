@@ -73,4 +73,8 @@ class User extends Authenticatable
         return $this->hasMany(ProjectCategory::class);
     }
     
+
+    public function subscriptions(){
+        return $this->hasMany(Subscription::class);
+    }
 }
