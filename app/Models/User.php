@@ -62,4 +62,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(Skill::class);
     }
+
+    public function project()
+    {
+        return $this->hasMany(Project::class);
+    }
+
+    public function projectCategory()
+    {
+        return $this->hasMany(ProjectCategory::class);
+    }
+    
 }
