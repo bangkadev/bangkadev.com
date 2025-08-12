@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Skill extends Model
 {
@@ -11,6 +12,23 @@ class Skill extends Model
         'name',
         'icon'
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static ::creating(function ($model) {
+            if(Auth::user()->role === 'pengguna') {
+                $model->user_id = Auth::user()->id;
+            }
+        });
+
+        static ::updating(function ($model) {
+            if(Auth::user()->role === 'pengguna') {
+                $model->user_id = Auth::user()->id;
+            }
+        });
+    }
 
     public function user()
     {
