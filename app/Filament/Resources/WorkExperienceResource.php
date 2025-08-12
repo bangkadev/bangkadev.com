@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\IntroResource\Pages;
-use App\Filament\Resources\IntroResource\RelationManagers;
-use App\Models\Intro;
+use App\Filament\Resources\WorkExperienceResource\Pages;
+use App\Filament\Resources\WorkExperienceResource\RelationManagers;
+use App\Models\WorkExperience;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,12 +14,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
-class IntroResource extends Resource
+class WorkExperienceResource extends Resource
 {
-    protected static ?string $model = Intro::class;
+    protected static ?string $model = WorkExperience::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
-    protected static ?string $navigationLabel = 'Manajemen Perkenalan';
+    protected static ?string $navigationLabel = 'Manajemen Pengalaman Kerja';
     protected static ?string $navigationGroup = 'Data Master';
 
     public static function getEloquentQuery(): Builder
@@ -43,15 +43,27 @@ class IntroResource extends Resource
                     ->relationship('user', 'name')
                     ->required()
                     ->hidden(fn() => Auth::user()->role === 'pengguna'),
-                Forms\Components\TextInput::make('name')
-                    ->label('Nama Lengkap')
+                Forms\Components\TextInput::make('company')
+                    ->label('Perusahaan')
                     ->required(),
-                Forms\Components\FileUpload::make('photo')
-                    ->label('Foto Pengguna')
+                Forms\Components\FileUpload::make('logo')
+                    ->label('Logo Perusahaan')
                     ->image()
                     ->required(),
-                Forms\Components\TextInput::make('description')
-                    ->label('Deskripsi')
+                Forms\Components\TextInput::make('position')
+                    ->label('Posisi')
+                    ->required(),
+                Forms\Components\TextInput::make('start_year')
+                    ->label('Tahun Mulai')
+                    ->numeric()
+                    ->minValue(1900)
+                    ->maxValue(2100)
+                    ->required(),
+                Forms\Components\TextInput::make('end_year')
+                    ->label('Tahun Berakhir')
+                    ->numeric()
+                    ->minValue(1900)
+                    ->maxValue(2100)
                     ->required(),
             ]);
     }
@@ -63,20 +75,22 @@ class IntroResource extends Resource
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Pengguna')
                     ->hidden(fn() => Auth::user()->role === 'pengguna'),
-                Tables\Columns\TextColumn::make('name')
-                    ->label('Nama Lengkap'),
-                Tables\Columns\ImageColumn::make('photo')
-                    ->label('Foto Pengguna'),
-                Tables\Columns\TextColumn::make('description')
-                    ->label('Deskripsi'),
+                Tables\Columns\TextColumn::make('company')
+                    ->label('Perusahaan'),
+                Tables\Columns\ImageColumn::make('logo')
+                    ->label('Logo Perusahaan'),
+                Tables\Columns\TextColumn::make('position')
+                    ->label('Posisi'),
+                Tables\Columns\TextColumn::make('start_year')
+                    ->label('Tahun Mulai'),
+                Tables\Columns\TextColumn::make('end_year')
+                    ->label('Tahun Berakhir'),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -95,9 +109,9 @@ class IntroResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListIntros::route('/'),
-            'create' => Pages\CreateIntro::route('/create'),
-            'edit' => Pages\EditIntro::route('/{record}/edit'),
+            'index' => Pages\ListWorkExperiences::route('/'),
+            'create' => Pages\CreateWorkExperience::route('/create'),
+            'edit' => Pages\EditWorkExperience::route('/{record}/edit'),
         ];
     }
 }
